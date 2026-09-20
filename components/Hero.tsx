@@ -22,8 +22,8 @@ export const Hero = () => {
     return () => window.removeEventListener("mousemove", updateMouse);
   }, [mouseX, mouseY]);
 
-  const scrollToDemo = () => {
-    document?.getElementById('sandbox')?.scrollIntoView({ behavior: 'smooth' });
+  const goToDashboard = () => {
+    window.location.href = '/dashboard';
   };
 
   return (
@@ -70,7 +70,7 @@ export const Hero = () => {
           </motion.p>
 
           <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, delay: 1 }}>
-            <MagneticButton onClick={scrollToDemo} className="px-10 py-5 font-bold text-lg">
+            <MagneticButton onClick={goToDashboard} className="px-10 py-5 font-bold text-lg">
               Deploy Sandbox <ArrowRight className="w-5 h-5 -rotate-45 group-hover:rotate-0 transition-transform duration-300" />
             </MagneticButton>
           </motion.div>
