@@ -92,9 +92,9 @@ npm install
 Create a `.env.local` file in the project root:
 
 ```env
-AWS_ACCESS_KEY_ID=your_access_key_id
-AWS_SECRET_ACCESS_KEY=your_secret_access_key
-AWS_REGION=us-east-1
+APP_AWS_ACCESS_KEY_ID=your_access_key_id
+APP_AWS_SECRET_ACCESS_KEY=your_secret_access_key
+APP_AWS_REGION=us-east-1
 DYNAMODB_TRANSACTIONS_TABLE=MerchantTransactions
 ```
 

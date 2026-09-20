@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import { WobbleCard } from "../components/ui/WobbleCard";
 
 
 export const ROICalculator = () => {
@@ -25,73 +26,93 @@ export const ROICalculator = () => {
 
       <div className="max-w-[1200px] mx-auto flex flex-col lg:flex-row gap-16 items-center">
         
-        <div className="lg:w-1/2 z-10">
+        <div className="lg:w-1/2 z-10 flex justify-between">
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <h2 className="text-5xl md:text-7xl font-bold tracking-tighter mb-6 uppercase">Serverless ROI</h2>
             <p className="text-white/60 text-lg mb-10 font-light leading-relaxed">
               Ditch expensive, easily-spoofed physical soundboxes. Scale infinitely with AWS Lambda & Bedrock at a fraction of the cost per merchant.
             </p>
             
-            <div className="bg-white/[0.03] border border-white/10 rounded-3xl p-8 backdrop-blur-md">
-              <div className="flex justify-between items-end mb-6">
-                <div>
-                  <div className="mono-font text-xs text-[#ccff00] mb-2 uppercase">Input Load Variable</div>
-                  <div className="text-2xl font-bold">Daily Transactions</div>
+            <WobbleCard
+              containerClassName="rounded-3xl border border-[#f2b0d2]/40 bg-[#b85d87]"
+              className="rounded-3xl bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.14),transparent_25%),linear-gradient(135deg,#d97bb0,#a74c77)]"
+            >
+              <div className="flex h-full flex-col justify-between py-6 px-3">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <div className="mono-font mb-2 text-xs uppercase tracking-[0.18em] text-[#ccff00]">Input Load Variable</div>
+                    <div className="text-2xl font-bold">Daily Transactions</div>
+                  </div>
+                  <div className="mono-font text-left text-2xl text-white sm:text-right">
+                    {txPerDay.toLocaleString()} <span className="text-sm text-white/40">/ day</span>
+                  </div>
                 </div>
-                <div className="mono-font text-2xl text-white">{txPerDay.toLocaleString()} <span className="text-sm text-white/40">/ day</span></div>
+
+                <div className="mt-8 z-0">
+                  <input
+                    type="range"
+                    min="50"
+                    max="5000"
+                    step="50"
+                    value={txPerDay}
+                    onChange={(e) => setTxPerDay(Number(e.target.value))}
+                    className="interactive-element w-full accent-[#ccff00]"
+                  />
+                  <div className="mono-font mt-4 flex justify-between text-xs text-white/40">
+                    <span>50</span>
+                    <span>5000+</span>
+                  </div>
+                </div>
               </div>
-              
-              <input 
-                type="range" 
-                min="50" 
-                max="5000" 
-                step="50"
-                value={txPerDay} 
-                onChange={(e) => setTxPerDay(Number(e.target.value))}
-                className="interactive-element w-full accent-[#ccff00]"
-              />
-              <div className="flex justify-between text-xs text-white/40 mt-4 mono-font">
-                <span>50</span>
-                <span>5000+</span>
-              </div>
-            </div>
+            </WobbleCard>
           </motion.div>
         </div>
 
         <div className="lg:w-1/2 w-full z-10">
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: 0.2 }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-6"
+            className="grid grid-cols-1 gap-6 md:grid-cols-2 md:auto-rows-fr"
           >
-            {/* Traditional Cost */}
-            <div className="bg-[#050505] border border-white/10 p-8 rounded-3xl flex flex-col justify-between min-h-[240px]">
-              <div className="mono-font text-xs text-white/50 uppercase">Hardware Boxes<br/>(1,000 Merchants)</div>
-              <div>
-                <div className="text-5xl font-bold text-white mb-2">₹{totalHardwareCost.toLocaleString()}</div>
-                <div className="text-sm text-white/40">/ month static rental</div>
+            <WobbleCard
+              containerClassName="rounded-3xl border border-[#9ab4ff]/45 bg-[#4d6de1]"
+              className="min-h-[240px] rounded-3xl bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.16),transparent_28%),linear-gradient(135deg,#7ca0ff,#4a67c6)]"
+            >
+              <div className="flex h-full flex-col justify-between">
+                <div className="mono-font text-xs uppercase text-white/50">Hardware Boxes<br/>(1,000 Merchants)</div>
+                <div>
+                  <div className="mb-2 text-5xl font-bold text-white">₹{totalHardwareCost.toLocaleString()}</div>
+                  <div className="text-sm text-white/40">/ month static rental</div>
+                </div>
               </div>
-            </div>
+            </WobbleCard>
 
-            {/* Serverless Cost */}
-            <div className="bg-[#ccff00]/10 border border-[#ccff00]/30 p-8 rounded-3xl flex flex-col justify-between min-h-[240px] relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-[#ccff00]/20 rounded-full blur-3xl" />
-              <div className="mono-font text-xs text-[#ccff00] uppercase relative z-10">AWS Serverless<br/>(AI Firewall API)</div>
-              <div className="relative z-10">
-                <div className="text-5xl font-bold text-[#ccff00] mb-2">₹{serverlessCost.toLocaleString()}</div>
-                <div className="text-sm text-[#ccff00]/60">/ month pure usage</div>
+            <WobbleCard
+              containerClassName="rounded-3xl border border-[#dfe98b]/55 bg-[#7d8b2d]"
+              className="min-h-[240px] rounded-3xl bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.12),transparent_26%),linear-gradient(135deg,#b8ca4a,#768a2b)]"
+            >
+              <div className="flex h-full flex-col justify-between">
+                <div className="mono-font relative z-10 text-xs uppercase text-[#ccff00]">AWS Serverless<br/>(AI Firewall API)</div>
+                <div className="relative z-10">
+                  <div className="mb-2 text-5xl font-bold text-[#ccff00]">₹{serverlessCost.toLocaleString()}</div>
+                  <div className="text-sm text-[#ccff00]/60">/ month pure usage</div>
+                </div>
               </div>
-            </div>
+            </WobbleCard>
 
-            {/* Savings Callout */}
-            <div className="md:col-span-2 bg-[#7000ff] text-white p-8 rounded-3xl flex items-center justify-between">
-              <div>
-                <div className="mono-font text-xs text-white/70 uppercase mb-2">Cost Reduction</div>
-                <div className="text-4xl md:text-5xl font-bold">{savingsPercent}% Savings</div>
+            <WobbleCard
+              containerClassName="md:col-span-2 h-[220px] rounded-3xl border border-[#b3a4ff]/45 bg-[#5d4fc7]"
+              className="h-full rounded-3xl bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.12),transparent_24%),linear-gradient(135deg,#7d69ec,#4a3cab)]"
+            >
+              <div className="flex h-full items-center justify-between gap-4 px-2">
+                <div className="flex-1 text-center md:text-left">
+                  <div className="mono-font mb-2 text-xs uppercase tracking-[0.18em] text-white/70">Cost Reduction</div>
+                  <div className="text-4xl font-bold leading-none md:text-5xl">{savingsPercent}% Savings</div>
+                </div>
+                <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-white/20 backdrop-blur-md">
+                  <ArrowRight className="h-8 w-8 -rotate-45" />
+                </div>
               </div>
-              <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-md">
-                <ArrowRight className="w-8 h-8 -rotate-45" />
-              </div>
-            </div>
+            </WobbleCard>
 
           </motion.div>
         </div>
