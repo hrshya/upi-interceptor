@@ -4,8 +4,11 @@ import { NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
 
+const awsRegion = process.env.APP_AWS_REGION || 'ap-south-1';
+const tableName = process.env.DYNAMODB_TRANSACTIONS_TABLE || 'MerchantTransactions';
+
 const client = new DynamoDBClient({
-  region: process.env.APP_AWS_REGION || 'ap-south-1',
+  region: awsRegion,
   credentials: {
     accessKeyId: process.env.APP_AWS_ACCESS_KEY_ID || '',
     secretAccessKey: process.env.APP_AWS_SECRET_ACCESS_KEY || '',
@@ -18,9 +21,28 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const merchantId = searchParams.get('merchantId') || 'STORE_9921';
 
+  const hasAccessKey = Boolean(process.env.APP_AWS_ACCESS_KEY_ID);
+  const hasSecretKey = Boolean(process.env.APP_AWS_SECRET_ACCESS_KEY);
+
+  if (!hasAccessKey || !hasSecretKey) {
+    console.error('Scans API deployment config missing:', {
+      APP_AWS_REGION: awsRegion,
+      hasAccessKey,
+      hasSecretKey,
+      DYNAMODB_TRANSACTIONS_TABLE: tableName,
+    });
+
+    return NextResponse.json(
+      {
+        error: 'Missing AWS deployment credentials. Set APP_AWS_ACCESS_KEY_ID and APP_AWS_SECRET_ACCESS_KEY in the deployed environment.',
+      },
+      { status: 500 }
+    );
+  }
+
   try {
     const response = await docClient.send(new QueryCommand({
-      TableName: process.env.DYNAMODB_TRANSACTIONS_TABLE || 'MerchantTransactions',
+      TableName: tableName,
       KeyConditionExpression: 'merchant_id = :mid',
       ExpressionAttributeValues: { ':mid': merchantId },
       ScanIndexForward: false,
@@ -29,6 +51,13 @@ export async function GET(request: Request) {
     return NextResponse.json(response.Items || []);
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to fetch merchant scans.';
+    console.error('Scans API DynamoDB error:', {
+      merchantId,
+      tableName,
+      awsRegion,
+      message,
+      error,
+    });
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
