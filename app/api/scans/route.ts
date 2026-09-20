@@ -4,6 +4,13 @@ import { NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
 
+console.log('Scans API env debug', {
+  hasAccessKey: Boolean(process.env.APP_AWS_ACCESS_KEY_ID),
+  hasSecretKey: Boolean(process.env.APP_AWS_SECRET_ACCESS_KEY),
+  region: process.env.APP_AWS_REGION,
+  table: process.env.DYNAMODB_TRANSACTIONS_TABLE,
+});
+
 const awsRegion = process.env.APP_AWS_REGION || 'ap-south-1';
 const tableName = process.env.DYNAMODB_TRANSACTIONS_TABLE || 'MerchantTransactions';
 
